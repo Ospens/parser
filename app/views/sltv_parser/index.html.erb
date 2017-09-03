@@ -1,0 +1,9 @@
+<% @page.each do |doc|%>
+	<% doc.css('tr').each do |tr| %>
+		<% tags = tr.css('.count_tourney_teams').each do |tag| %>
+			<% next if tag.text.strip !~ @date %>
+			<%= tr.css('.tournament_name').text.strip %>
+			<%= page = tr.css('.tournament_name')[0]['href'].strip %>
+		<% end %>
+	<% end %>
+<% end %>
