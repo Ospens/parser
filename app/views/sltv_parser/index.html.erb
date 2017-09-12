@@ -1,12 +1,4 @@
-<% @showings.each do |doc|%>
-	<table>
-		<tr>
-			<td><%= doc[:title] %></td>
-		</tr>
-		<% doc[:tour_tags].each do |tour_tag|%>
-		<tr>
-			<td><%= tour_tag[:team_link] %></td>
-		</tr>
-		<% end %>
-	</table>
-<% end %>
+      <%= form_tag parser_path do %>
+        <%= text_field_tag :q %>
+        <button>Спарсить</button>
+      <% end %>

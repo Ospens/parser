@@ -1,0 +1,9 @@
+<% @info.each do |doc|%>
+	<table>
+		<tr>
+			<td><%= doc[:id] %></td>
+			<td><%= doc[:link] %></td>
+			<td><%= doc[:last_log] %></td>
+		</tr>
+	</table>
+<% end %>

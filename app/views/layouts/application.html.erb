@@ -9,6 +9,44 @@
   </head>
 
   <body>
-    <%= yield %>
+  <nav class="navbar navbar-expand navbar-inverse" style="background-color: #9b0000;">
+
+    <a class="navbar-brand" href="/">SLTV</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <% if user_signed_in? %>
+    <a class="nav-link" href="/sltv_parser">Парсинг SLTV</a>
+    <a class="nav-link" href="/wesg_parser">Парсинг WESG</a>
+    <a class="nav-link" href="/steam_id">Обработка SteamID</a>
+      <ul class="navbar-nav mr-auto">
+
+      </ul>
+          <%= link_to "Выход", destroy_user_session_path, method: :delete, class: "nav-link" %>
+        <% else %>
+          <%= link_to "Вход", new_user_session_path, class: "nav-link" %>
+        <%# link_to "Регистрация", new_user_registration_path, class: "nav-link" %>
+      <% end %>
+    </div>
+  </nav>
+
+  <div class="container main">
+    <div class="row">
+      <div class="col-md-12">
+        <% flash.each do |name, message| %>
+          <div class="alert <%= bootstrap_class_for(name) %>">
+            <button class="close" data-dismiss="alert">&times;</button>
+            <%= message %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div style="min-height: 1000px">
+      <%= yield %>
+    </div>
+  </div>
+
+    
   </body>
 </html>
