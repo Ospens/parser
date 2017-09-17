@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 	root 'sltv_parser#index'
 	post "parser" => "sltv_parser#parser"
 	post "steam_pars" => "steam_id#steam_pars"
-	post "parser" => "wesg_parser#steam_pars"
+	post "parser_wesg" => "wesg_parser#parser_wesg"
 	resources :sltv_parser
 	resources :wesg_parser
 	resources :steam_id
