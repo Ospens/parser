@@ -42,12 +42,21 @@ class SltvParserController < ApplicationController
 							team_link = tr_team.css('a.tournament_member').each{ |link| @squad_link = link['href'] }
 							#mechanize не парсит ссылку, хз почему, пришлось использовать Nokogiri
 							@s_link = Nokogiri::HTML(open('http://dota2.starladder.tv'+@squad_link))
-							@team_link = @s_link.css('.usermenu').css('li a')[0]['href']
-							@skype = @s_link.css('span.team_info_contacts_text').text
-							@cap_link = @s_link.css('div.team_info_contacts_title a')[0]['href']
-							@capitan_link = agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history')
-							@steam_id = @capitan_link.css('.history_g_id a')[0]['href']
-
+							if @s_link.css('.usermenu').css('li a') == nil
+								@team_link = 'Команда удалена'
+								@skype = 'Команда удалена'
+								@cap_link = 'Команда удалена'
+								@capitan_link = 'Команда удалена'
+								@steam_id = 'Команда удалена'
+								@steam_id = 'Команда удалена'
+							else
+								@team_link = @s_link.css('.usermenu').css('li a')[0]['href']
+								@skype = @s_link.css('span.team_info_contacts_text').text
+								@cap_link = @s_link.css('div.team_info_contacts_title a')[0]['href']
+								@capitan_link = agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history')
+								@steam_id = @capitan_link.css('.history_g_id a')[0]['href'] if @capitan_link.css('.history_g_id a')[0] != nil
+								@steam_id = 'капитана нет'if @capitan_link.css('.history_g_id a')[0] == nil
+							end
 							@tags.push(
 								team_tag: @team_tag,
 								squad_link: @squad_link,
