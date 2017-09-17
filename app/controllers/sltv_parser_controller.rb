@@ -54,8 +54,16 @@ class SltvParserController < ApplicationController
 								@skype = @s_link.css('span.team_info_contacts_text').text
 								@cap_link = @s_link.css('div.team_info_contacts_title a')[0]['href']
 								@capitan_link = agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history')
-								@steam_id = @capitan_link.css('.history_g_id a')[0]['href'] if @capitan_link.css('.history_g_id a')[0] != nil
-								@steam_id = 'капитана нет'if @capitan_link.css('.history_g_id a')[0] == nil
+								
+								@capitan_link.css('.history_g_id').each do |history|
+									puts history.css('i')[0]['class']
+									next if history.css('i')[0]['class'] != 'ico_trn ico_trn_dota2'
+									if @capitan_link.css('.history_g_id a')[0] != nil
+										@steam_id = @capitan_link.css('.history_g_id a')[0]['href']
+										break
+									end 
+								end
+								@steam_id = 'Стима нет' if @capitan_link.css('.history_g_id a')[0] == nil
 							end
 							@tags.push(
 								team_tag: @team_tag,

@@ -32,4 +32,13 @@ td {
 table {
 	margin-top: 10px;
 }
-
+div.form-group {
+	input {
+		width: 70%;
+		float: left;
+		margin-right: 10px
+	}
+	button {
+		width: 25%;
+	}
+}

@@ -14,9 +14,10 @@
     <a class="navbar-brand" href="/">SLTV</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <% if user_signed_in? %>
-    <a class="nav-link" href="/sltv_parser">Парсинг SLTV</a>
-    <a class="nav-link" href="/wesg_parser">Парсинг WESG</a>
-    <a class="nav-link" href="/steam_id">Обработка SteamID</a>
+
+    <a class="nav-link <%= 'disabled' if current_page?(sltv_parser_index_path) || current_page?(root_path)%>" href=<%=sltv_parser_index_path%> >Парсинг SLTV</a>
+    <a class="nav-link <%= 'disabled' if current_page?(wesg_parser_index_path) %>" href=<%=wesg_parser_index_path%>>Парсинг WESG</a>
+    <a class="nav-link <%= 'disabled' if current_page?(steam_id_index_path) %>" href=<%=steam_id_index_path%>>Обработка SteamID</a>
       <ul class="navbar-nav mr-auto">
 
       </ul>
