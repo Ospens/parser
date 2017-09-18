@@ -26,6 +26,7 @@ class WesgParserController < ApplicationController
 			next if @link == nil
 			@tag = tr.css('strong').text
 			@team_link = agent.get('https://en.wesg.com'+@link)
+			@country = @team_link.css('h2')[1].css('span')[0]['title']
 			@capitan_nick = @team_link.css('li.list-group-item strong')[0].text
 			@capitan_link = @team_link.css('li.list-group-item a')[0]['href']
 			@cap_link = agent.get('https://en.wesg.com'+@capitan_link)
@@ -34,6 +35,7 @@ class WesgParserController < ApplicationController
 			@showings.push(
 				tag: @tag,
 				team_link: @link,
+				country: @country,
 				cap_nick: @capitan_nick,
 				cap_link: @capitan_link,
 				steam: @steam_id,

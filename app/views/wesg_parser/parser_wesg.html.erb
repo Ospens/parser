@@ -2,6 +2,8 @@
 	<thead>
 		<tr>
 			<td>Team tag</td>
+			<td>Link</td>
+			<td>Country</td>
 			<td>Nick</td>
 			<td>Skype</td>
 			<td>Steam</td>
@@ -11,6 +13,8 @@
 	<tbody>
 		<tr>
 			<td><%= link_to doc[:tag],('https://en.wesg.com'+doc[:team_link]) %></td>
+			<td><%= link_to ('https://en.wesg.com'+doc[:team_link]),('https://en.wesg.com'+doc[:team_link]) %></td>
+			<td><%= link_to doc[:country],('https://en.wesg.com'+doc[:team_link]) %></td>
 			<td><%= link_to doc[:cap_nick],('https://en.wesg.com'+doc[:cap_link]) %></td>
 			<td><%= link_to doc[:skype],('https://en.wesg.com'+doc[:cap_link]) %></td>
 			<td><%= link_to ('http://steamcommunity.com/profiles/'+doc[:steam]),('http://steamcommunity.com/profiles/'+doc[:steam])  %></td>
