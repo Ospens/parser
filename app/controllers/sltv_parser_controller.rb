@@ -51,19 +51,11 @@ class SltvParserController < ApplicationController
 								@steam_id = 'Команда удалена'
 							else
 								@team_link = @s_link.css('.usermenu').css('li a')[0]['href']
-								@skype = @s_link.css('span.team_info_contacts_text').text
+								@skype = @s_link.css('span.team_info_contacts_text')[0].text
 								@cap_link = @s_link.css('div.team_info_contacts_title a')[0]['href']
 								@capitan_link = agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history')
-								
-								@capitan_link.css('.history_g_id').each do |history|
-									puts history.css('i')[0]['class']
-									next if history.css('i')[0]['class'] != 'ico_trn ico_trn_dota2'
-									if @capitan_link.css('.history_g_id a')[0] != nil
-										@steam_id = @capitan_link.css('.history_g_id a')[0]['href']
-										break
-									end 
-								end
-								@steam_id = 'Стима нет' if @capitan_link.css('.history_g_id a')[0] == nil
+
+								p @steam_id = get_steam
 							end
 							@tags.push(
 								team_tag: @team_tag,
@@ -85,4 +77,14 @@ class SltvParserController < ApplicationController
 			end
 		end 
 	end
+
+	def get_steam
+		return 'Стима нет' if @capitan_link.css('.history_g_id a')[0] == nil
+		@capitan_link.css('.history_g_id').each do |history|
+			next if history.css('i')[0]['class'] != 'ico_trn ico_trn_dota2'
+			return history.css('a')[0]['href'] if @capitan_link.css('.history_g_id a')[0] != nil 
+			return 'Стима нет'
+		end
+	end
 end 
+
