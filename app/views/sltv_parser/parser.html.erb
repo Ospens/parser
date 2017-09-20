@@ -6,7 +6,8 @@
 		<td>Скайп</td>
 		<td>Стим</td>
 	</tr>	
-	<thead>
+	</thead>
+	<tbody>
 	<% @showings.each do |doc|%>
 		<tr>
 			<td><%= doc[:title] %></td>
@@ -20,4 +21,5 @@
 		</tr>
 		<% end %>
 	<% end %>
+	</tbody>
 </table>
