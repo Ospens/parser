@@ -1,0 +1,25 @@
+<table>
+<% @teams.each do |doc|%>
+	<tr>
+		<td><%= doc[:team_tag] %></td>
+		<td><%= doc[:team_url] %></td>
+	</tr>
+	<tr>
+		<td><%= doc[:team_member1] %></td>
+		<td><%= doc[:cap_steam] %></td>
+	</tr>
+	<tr>
+		<td><%= doc[:team_member2] %></td>
+	</tr>
+	<tr>
+		<td><%= doc[:team_member3] %></td>
+	</tr>
+	<tr>
+		<td><%= doc[:team_member4] %></td>
+	</tr>
+	<tr>
+		<td><%= doc[:team_member5] %></td>
+	</tr>
+	<tr></tr>
+<% end %>
+</table>
