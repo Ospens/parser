@@ -1,24 +1,31 @@
 <table>
 <% @teams.each do |doc|%>
 	<tr>
-		<td><%= doc[:team_tag] %></td>
-		<td><%= doc[:team_url] %></td>
+		<td><%= link_to doc[:team_tag],('https://www.faceit.com/ru/teams/'+doc[:team_url])  %></td>
+		<td><%= link_to ('https://www.faceit.com/ru/teams/'+doc[:team_url]),('https://www.faceit.com/ru/teams/'+doc[:team_url]) %></td>
+		<td><%= doc[:cap_nickname] %></td>
+		<td><%= doc[:cap_steam] %></td>
+		<td><%= doc[:cap_steam_64] %></td>
 	</tr>
 	<tr>
 		<td><%= doc[:team_member1] %></td>
-		<td><%= doc[:cap_steam] %></td>
+		<td><%= doc[:country1] %></td>
 	</tr>
 	<tr>
 		<td><%= doc[:team_member2] %></td>
+		<td><%= doc[:country2] %></td>
 	</tr>
 	<tr>
 		<td><%= doc[:team_member3] %></td>
+		<td><%= doc[:country3] %></td>
 	</tr>
 	<tr>
 		<td><%= doc[:team_member4] %></td>
+		<td><%= doc[:country4] %></td>
 	</tr>
 	<tr>
 		<td><%= doc[:team_member5] %></td>
+		<td><%= doc[:country5] %></td>
 	</tr>
 	<tr></tr>
 <% end %>
