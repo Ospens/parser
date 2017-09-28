@@ -74,11 +74,11 @@ class SltvParserController < ApplicationController
 			@steam_id =     'Команда удалена'
 			@steam_id =     'Команда удалена'
 		else
-			@team_link    = @s_link.css('.usermenu').css('li a')[0]['href']
-			@skype        = @s_link.css('span.team_info_contacts_text')[0].text
-			@cap_link     = @s_link.css('div.team_info_contacts_title a')[0]['href']
-			@capitan_link = @agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history')
-			@steam_id     = get_steam
+			@team_link    = @s_link.css('.usermenu').css('li a')[0] != nil ? 'http://dota2.starladder.tv' + @s_link.css('.usermenu').css('li a')[0]['href'] : 'команда удалена' 
+			@skype        = @s_link.css('span.team_info_contacts_text').present? ? @s_link.css('span.team_info_contacts_text')[0].text : 'команда удалена'
+			@cap_link     = @s_link.css('div.team_info_contacts_title a')[0].present? ? @s_link.css('div.team_info_contacts_title a')[0]['href'] : 'команда удалена'
+			@capitan_link = @cap_link != 'команда удалена' ? @agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history') : 'команда удалена'
+			@steam_id     = @cap_link != 'команда удалена' ? get_steam : 'команда удалена' 
 		end
 		@tags.push(
 			team_tag: @team_tag,
