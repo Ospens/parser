@@ -1,6 +1,7 @@
 class SltvParserController < ApplicationController
 	before_action :authenticate_user!
-
+   	respond_to :html, :js
+	
 	def index		
 	end
 
@@ -46,7 +47,7 @@ class SltvParserController < ApplicationController
 					@tour     = []
 				end
 			end
-		end 
+		end
 	end
 
 	def get_steam
