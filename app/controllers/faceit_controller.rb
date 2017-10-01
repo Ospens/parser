@@ -5,13 +5,12 @@ class FaceitController < ApplicationController
 	end
 
 	def parser_faceit
-		@showings = []
 		@teams = []
-		url = 'https://s3.amazonaws.com/faceit-prod-frontend/tournaments_json/tournament_ff0701ec-6988-459b-953c-5c7c6f4caa7b_rankings.json'
+		@members = []
+		url = "https://s3.amazonaws.com/faceit-prod-frontend/tournaments_json/tournament_#{params[:q]}_rankings.json"
 		uri = URI(url)
 		response = Net::HTTP.get(uri)
 		tour = JSON.parse(response)
-		count = 0
 		tour['payload'].each do |id, team|
 			#@team_tag = team['nickname']
 			@team_tag     = ''
@@ -31,7 +30,6 @@ class FaceitController < ApplicationController
 			team = "https://api.faceit.com/core/v1/teams/#{id}"
 			team = get_json(team)
 			next if team['result'] == 'error'
-			#if team['payload'] != nil
 				@team_tag = team['payload']['name']
 				cap_uri = team['payload']['leader']
 				@cap_url = "https://api.faceit.com/core/v1/users/#{cap_uri}"
@@ -52,27 +50,31 @@ class FaceitController < ApplicationController
 				@country3 = team['payload']['members'][2]['country'] if team['payload']['members'][2] != nil
 				@country4 = team['payload']['members'][3]['country'] if team['payload']['members'][3] != nil
 				@country5 = team['payload']['members'][4]['country'] if team['payload']['members'][4] != nil
-			#end
-			break if count == 4  
-			count +=1
+
+				@members.push(
+					team_member1: @team_member1,
+					team_member2: @team_member2,
+					team_member3: @team_member3,
+					team_member4: @team_member4,
+					team_member5: @team_member5,
+					country1: @country1,
+					country2: @country2,
+					country3: @country3,
+					country4: @country4,
+					country5: @country5
+				)
+				p @members
+				@team_url = 'https://www.faceit.com/ru/teams/'+@team_url
 		@teams.push(
 		team_tag: @team_tag,
 		team_url: @team_url,
 		cap_nickname: @cap_nickname,
 		cap_steam: @cap_steam,
 		cap_country: @cap_country,
-		cap_steam_64: @cap_steam_64, 
-		team_member1: @team_member1,
-		team_member2: @team_member2,
-		team_member3: @team_member3,
-		team_member4: @team_member4,
-		team_member5: @team_member5,
-		country1: @country1,
-		country2: @country2,
-		country3: @country3,
-		country4: @country4,
-		country5: @country5
+		cap_steam_64: @cap_steam_64,
+		members: @members
 		)
+		@members = []
 		end
 	end
 

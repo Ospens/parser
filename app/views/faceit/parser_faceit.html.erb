@@ -1,32 +1,44 @@
 <table>
 <% @teams.each do |doc|%>
 	<tr>
-		<td><%= link_to doc[:team_tag],('https://www.faceit.com/ru/teams/'+doc[:team_url])  %></td>
-		<td><%= link_to ('https://www.faceit.com/ru/teams/'+doc[:team_url]),('https://www.faceit.com/ru/teams/'+doc[:team_url]) %></td>
-		<td><%= doc[:cap_nickname] %></td>
+		<td><%= link_to doc[:team_tag], doc[:team_url]  %></td>
+		<td><%= link_to doc[:team_url], doc[:team_url] %></td>
+		<td><%= link_to doc[:cap_nickname], ('https://www.faceit.com/ru/players/'+doc[:cap_nickname]) %></td>
 		<td><%= doc[:cap_steam] %></td>
-		<td><%= doc[:cap_steam_64] %></td>
+		<td><%= link_to ('http://steamcommunity.com/profiles/'+doc[:cap_steam_64]), ('http://steamcommunity.com/profiles/'+doc[:cap_steam_64])%></td>
 	</tr>
-	<tr>
-		<td><%= doc[:team_member1] %></td>
-		<td><%= doc[:country1] %></td>
-	</tr>
-	<tr>
-		<td><%= doc[:team_member2] %></td>
-		<td><%= doc[:country2] %></td>
-	</tr>
-	<tr>
-		<td><%= doc[:team_member3] %></td>
-		<td><%= doc[:country3] %></td>
-	</tr>
-	<tr>
-		<td><%= doc[:team_member4] %></td>
-		<td><%= doc[:country4] %></td>
-	</tr>
-	<tr>
-		<td><%= doc[:team_member5] %></td>
-		<td><%= doc[:country5] %></td>
-	</tr>
+	<% doc[:members].each do |member|%>
+		<% if member[:team_member1] != ''%>
+			<tr>
+				<td><%= member[:team_member1] %></td>
+				<td><%= member[:country1] %></td>
+			</tr>
+		<% end %>
+		<% if member[:team_member2] !=''%>
+			<tr>
+				<td><%= member[:team_member2] %></td>
+				<td><%= member[:country2] %></td>
+			</tr>
+		<% end %>
+		<% if member[:team_member3] != ''%>
+			<tr>
+				<td><%= member[:team_member3] %></td>
+				<td><%= member[:country3] %></td>
+			</tr>
+		<% end %>
+		<% if member[:team_member4] != ''%>
+			<tr>
+				<td><%= member[:team_member4] %></td>
+				<td><%= member[:country4] %></td>
+			</tr>
+		<% end %>
+		<% if member[:team_member5] != ''%>
+			<tr>
+				<td><%= member[:team_member5] %></td>
+				<td><%= member[:country5] %></td>
+			</tr>
+		<% end %>
+	<% end %>
 	<tr></tr>
 <% end %>
 </table>
