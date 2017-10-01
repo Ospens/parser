@@ -1,6 +1,6 @@
 <div class="form-group"> 
 	<%= form_tag parser_wesg_path do %>
-		<%= text_field_tag :q, nil, class: 'form-control mr-sm-2' %>
+		<%= text_field_tag :q, nil, class: 'form-control mr-sm-2', placeholder: 'Например: https://en.wesg.com/en/dota2/tournaments/1413/members' %>
 		<button class="btn btn-outline-danger my-2 my-sm-0">Спарсить</button>
 	<% end %>
 </div>
