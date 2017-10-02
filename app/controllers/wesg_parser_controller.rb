@@ -1,3 +1,4 @@
+# encoding: utf-8
 class WesgParserController < ApplicationController
 	before_action :authenticate_user!
 
@@ -31,7 +32,7 @@ class WesgParserController < ApplicationController
 			@capitan_link = @team_link.css('li.list-group-item a')[0]['href']
 			@cap_link = agent.get('https://en.wesg.com'+@capitan_link)
 			@steam_id = @cap_link.css('h2 small').text
-			@skype = @cap_link.body.scan(%r{Skype:\n(.*)})[0][0]
+			@skype = @cap_link.body.scan(/Skype:\n(.*)/).flatten[0].force_encoding("UTF-8")
 			@showings.push(
 				tag: @tag,
 				team_link: @link,
