@@ -33,6 +33,8 @@ class WesgParserController < ApplicationController
 			@cap_link = agent.get('https://en.wesg.com'+@capitan_link)
 			@steam_id = @cap_link.css('h2 small').text
 			@skype = @cap_link.body.scan(/Skype:\n(.*)/).flatten[0].force_encoding("UTF-8")
+			@last_log_steam = agent.get('https://steamid.xyz/'+@steam_id)
+			@last_log_steam = @last_log_steam.body.scan(%r{<i>Last Logoff:</i>(.*)<br>})[0][0]
 			@showings.push(
 				tag: @tag,
 				team_link: @link,
@@ -40,6 +42,7 @@ class WesgParserController < ApplicationController
 				cap_nick: @capitan_nick,
 				cap_link: @capitan_link,
 				steam: @steam_id,
+				last_log_steam: @last_log_steam,
 				skype: @skype
 				)
 		end 
