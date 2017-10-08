@@ -1,5 +1,6 @@
 class WesgParserController < ApplicationController
 	before_action :authenticate_user!
+   	respond_to :html, :js
 
 	def index
 
@@ -11,12 +12,8 @@ class WesgParserController < ApplicationController
 			agent.user_agent_alias = 'Linux Mozilla'
 			agent.request_headers = {'X-Requested-With' => 'XMLHttpRequest'}
 		}
-		path = params[:q] 
-		path = 'https://en.wesg.com/' if params[:q].length < 10
-		html = agent.get(path) 
-		#Регулярное выражение для поиска даты
-		#date = params[:q]
-		#@date = /^#{date}/
+		path = params[:q] != '' ? params[:q] : 'https://en.wesg.com/en/'
+		html = agent.get(path)
 		@showings = []
 		@tags     = []
 		@tour     = []

@@ -1,13 +1,16 @@
 class FaceitController < ApplicationController
-
 	before_action :authenticate_user!
+   	respond_to :html, :js
+
 	def index	
 	end
 
 	def parser_faceit
 		@teams = []
 		@members = []
-		url = "https://s3.amazonaws.com/faceit-prod-frontend/tournaments_json/tournament_#{params[:q]}_rankings.json"
+		return false if params[:q] == ''
+		respond = params[:q]
+		url = "https://s3.amazonaws.com/faceit-prod-frontend/tournaments_json/tournament_#{respond}_rankings.json"
 		uri = URI(url)
 		response = Net::HTTP.get(uri)
 		tour = JSON.parse(response)
@@ -63,7 +66,6 @@ class FaceitController < ApplicationController
 					country4: @country4,
 					country5: @country5
 				)
-				p @members
 				@team_url = 'https://www.faceit.com/ru/teams/'+@team_url
 		@teams.push(
 		team_tag: @team_tag,
