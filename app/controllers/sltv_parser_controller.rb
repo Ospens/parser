@@ -1,6 +1,7 @@
 class SltvParserController < ApplicationController
 	before_action :authenticate_user!
-
+   	respond_to :html, :js
+	
 	def index		
 	end
 
@@ -19,7 +20,7 @@ class SltvParserController < ApplicationController
 
 		html = @agent.get('http://dota2.starladder.tv/tournaments/')
 		#Регулярное выражение для поиска даты
-		date = params[:q]
+		date = params[:q] != '' ? params[:q] : '11 сентября'
 		@date = /^#{date}/
 		@showings = []
 		@tags     = []
@@ -46,7 +47,7 @@ class SltvParserController < ApplicationController
 					@tour     = []
 				end
 			end
-		end 
+		end
 	end
 
 	def get_steam

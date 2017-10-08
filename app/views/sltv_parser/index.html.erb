@@ -1,6 +1,8 @@
 <div class="form-group"> 
-	<%= form_tag parser_path do %>
-    <%= text_field_tag :q, nil, class: 'form-control mr-sm-2', placeholder: 'Например: 25 сентября' %>
-		<button class="btn btn-outline-danger my-2 my-sm-0">Спарсить</button>
-  <% end %>
+	<%= form_tag("/parser", method: 'post', :remote => true, :id => 'form') do %>
+	    <%= text_field_tag :q, nil, class: 'form-control mr-sm-2', placeholder: 'Например: 25 сентября' %>
+		<button  id="button" class="btn btn-outline-danger my-2 my-sm-0">Спарсить</button>
+	<% end %>
 </div>
+<div style="padding-top: 10px;"></div>
+<div id="teams_sltv"></div>
