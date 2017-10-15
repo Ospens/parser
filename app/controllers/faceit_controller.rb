@@ -14,6 +14,12 @@ class FaceitController < ApplicationController
 		uri = URI(url)
 		response = Net::HTTP.get(uri)
 		tour = JSON.parse(response)
+	
+		@agent = Mechanize.new { |agent|
+			agent.user_agent_alias = 'Mac Safari'
+			agent.request_headers = {'X-Requested-With' => 'XMLHttpRequest'}
+			}
+
 		tour['payload'].each do |id, team|
 			#@team_tag = team['nickname']
 			@team_tag     = ''
@@ -53,6 +59,11 @@ class FaceitController < ApplicationController
 				@country3 = team['payload']['members'][2]['country'] if team['payload']['members'][2] != nil
 				@country4 = team['payload']['members'][3]['country'] if team['payload']['members'][3] != nil
 				@country5 = team['payload']['members'][4]['country'] if team['payload']['members'][4] != nil
+				
+				## переделать
+				last_log = SteamIdController.new
+				page = @agent.get('https://steamid.xyz/'+@cap_steam_64)
+				@last_log = last_log.get_last_log(page)
 
 				@members.push(
 					team_member1: @team_member1,
@@ -74,6 +85,7 @@ class FaceitController < ApplicationController
 		cap_steam: @cap_steam,
 		cap_country: @cap_country,
 		cap_steam_64: @cap_steam_64,
+		last_log: @last_log,
 		members: @members
 		)
 		@members = []
