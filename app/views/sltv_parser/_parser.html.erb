@@ -1,10 +1,14 @@
 <table>
 	<thead>
 	<tr>
-		<td>Тег</td>
-		<td>Ник</td>
-		<td>Скайп</td>
-		<td>Стим</td>
+		<td>Tag</td>
+		<td>Teamlink</td>
+		<td>Skype</td>
+		<td>Steam link</td>
+		<td>Steam ID</td>
+		<td>Last log</td>
+		<td>Country</td>
+		<td>Nick</td>
 	</tr>	
 	</thead>
 	<tbody>
@@ -18,6 +22,10 @@
 			<td><%= link_to tour_tag[:team_link], tour_tag[:team_link] %></td>
 			<td><%= link_to tour_tag[:skype], ("http://dota2.starladder.tv"+tour_tag[:capitan_link]) %></td>
 			<td><%= link_to tour_tag[:steam_id], tour_tag[:steam_id] %></td>
+			<td><%= link_to tour_tag[:steam_link], tour_tag[:steam_link] %></td>
+			<td><%= tour_tag[:last_log_steam] %></td>
+			<td><%= tour_tag[:country] %></td>
+			<td><%= tour_tag[:cap_nick] %></td>
 		</tr>
 		<% end %>
 	<% end %>
