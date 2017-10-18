@@ -82,15 +82,18 @@ class SltvParserController < ApplicationController
 			@skype          = @s_link.css('span.team_info_contacts_text').present? ? @s_link.css('span.team_info_contacts_text')[0].text : 'команда удалена'
 			@cap_link       = @s_link.css('div.team_info_contacts_title a')[0].present? ? @s_link.css('div.team_info_contacts_title a')[0]['href'] : 'команда удалена'
 			@capitan_link   = @cap_link != 'команда удалена' ? @agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history') : 'команда удалена'
-			@cap_nick       = @capitan_link.css('span.info-general__container__name')[0].present? ? @capitan_link.css('span.info-general__container__name')[0].text : 'команда удалена'
-			@steam_link     = @cap_link != 'команда удалена' ? get_steam : 'команда удалена' 
-			@country        = @capitan_link.body.scan(/<i class="ico_flag ico_flag_(.*)"><\/i><span/)[0][0]
+			
+			if @capitan_link != 'команда удалена'
+				@cap_nick       = @capitan_link.css('span.info-general__container__name')[0].present? ? @capitan_link.css('span.info-general__container__name')[0].text : 'команда удалена'
+				@steam_link     = @cap_link != 'команда удалена' ? get_steam : 'команда удалена' 
+				@country        = @capitan_link.body.scan(/<i class="ico_flag ico_flag_(.*)"><\/i><span/)[0][0] && @cap_link != 'команда удалена'
 
-			if @cap_link != 'команда удалена' && @steam_link != 'Стима нет'
-				about_steam = SteamIdController.new				
-				page_steam = @agent.get('https://steamid.xyz/'+@steam_link)
-				@last_log_steam = about_steam.get_last_log(page_steam)
-				@steam_id = about_steam.get_steam_id(page_steam)
+				if @steam_link != 'Стима нет'
+					about_steam = SteamIdController.new				
+					page_steam = @agent.get('https://steamid.xyz/'+@steam_link)
+					@last_log_steam = about_steam.get_last_log(page_steam)
+					@steam_id = about_steam.get_steam_id(page_steam)
+				end
 			end
 		end
 		@steam_link = 'ошибка' if @steam_link == 0 
