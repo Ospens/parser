@@ -86,7 +86,7 @@ class SltvParserController < ApplicationController
 			if @capitan_link != 'команда удалена'
 				@cap_nick       = @capitan_link.css('span.info-general__container__name')[0].present? ? @capitan_link.css('span.info-general__container__name')[0].text : 'команда удалена'
 				@steam_link     = @cap_link != 'команда удалена' ? get_steam : 'команда удалена' 
-				@country        = @capitan_link.body.scan(/<i class="ico_flag ico_flag_(.*)"><\/i><span/)[0][0] && @cap_link != 'команда удалена'
+				@country        = @capitan_link.body.scan(/<i class="ico_flag ico_flag_(.*)"><\/i><span/)[0][0] if @cap_link != 'команда удалена'
 
 				if @steam_link != 'Стима нет'
 					about_steam = SteamIdController.new				
