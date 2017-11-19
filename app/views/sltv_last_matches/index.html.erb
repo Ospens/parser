@@ -1,0 +1,8 @@
+<div class="form-group"> 
+	<%= form_tag("/last_matches", method: 'post', :remote => true) do %>
+		<%= text_area_tag :q, nil, class: 'form-control mr-sm-2', placeholder: "Вводить каждую ссылку с новой строки"%>
+		<button class="btn btn-outline-danger my-2 my-sm-0">Спарсить</button>
+	<% end %>
+</div>
+<div style="padding-top: 10px;"></div>
+<div id="last_matches"></div>

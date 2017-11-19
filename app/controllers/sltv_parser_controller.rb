@@ -5,8 +5,7 @@ class SltvParserController < ApplicationController
 	def index		
 	end
 
-	def parser
-
+	def auth
 		@agent = Mechanize.new { |agent|
 			agent.user_agent_alias = 'Linux Mozilla'
 			agent.request_headers = {'X-Requested-With' => 'XMLHttpRequest'}
@@ -16,8 +15,12 @@ class SltvParserController < ApplicationController
 		form.word = 'kekichkekich'
 		form.password = 'qwerty123456'
 		page = @agent.submit(form, form.buttons.first)
+		@agent
+	end
 
-
+	def parser
+		# Авторизация
+		auth
 		html = @agent.get('http://dota2.starladder.tv/tournaments/')
 		#Регулярное выражение для поиска даты
 		date = params[:q] != '' ? params[:q] : '11 сентября'

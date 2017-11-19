@@ -1,0 +1,9 @@
+<% @teams_info.each do |team|%>
+	<table>
+		<tr>
+			<td style='width: 150px;'><%= team[:team_tag] %></td>
+			<td style='width: 300px;'><%=  link_to team[:team_link],(team[:team_link]) %></td>
+			<td><%= team[:last_match] %></td>
+		</tr>
+	</table>
+<% end %>
