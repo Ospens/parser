@@ -47,8 +47,14 @@ class WesgParserController < ApplicationController
 
 				about_stem = SteamIdController.new				
 				page_steam = agent.get('https://steamid.xyz/'+@steam_link)
-				@last_log_steam = about_stem.get_last_log(page_steam)
-				@steam_id = about_stem.get_steam_id(page_steam)
+				if (page_steam.body.scan(%r{Player Not Found :})[0].present?)
+					@last_log_steam = 'Ошибка стима'
+					@steam_id = 'Ошибка стима'
+				else
+					@last_log_steam = about_stem.get_last_log(page_steam)
+					@steam_id = about_stem.get_steam_id(page_steam)
+				end
+				
 			end
 			@showings.push(
 				tag: @tag,
