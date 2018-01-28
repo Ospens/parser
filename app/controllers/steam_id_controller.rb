@@ -38,7 +38,7 @@ class SteamIdController < ApplicationController
 		else
 			page = @agent.get('https://steamid.xyz/'+id_line)
 			@id = get_steam_id(page) 
-			@link = page.css('div#guide input')[6]['value']
+			@link = get_steam_link(page)
 			@last_log = get_last_log(page)	
 		end
 	end
@@ -49,6 +49,10 @@ class SteamIdController < ApplicationController
 
 	def get_steam_id(page)
 		page.body.scan(%r{(STEAM_.*)"})[0][0]
+	end
+
+	def get_steam_link(page)
+		page.css('div#guide input')[6]['value']
 	end
 
 end
