@@ -1,0 +1,8 @@
+<div class="form-group"> 
+	<%= form_tag("/esl_parser", method: 'post', :remote => true) do %>
+		<%= text_field_tag :q, nil, class: 'form-control mr-sm-2', placeholder: "Например: https://play.eslgaming.com/dota2/europe/dota2/major/go4dota2-europe/cup-147/contestants/#!?type=name&order=asc" %>
+		<button class="btn btn-outline-danger my-2 my-sm-0">Спарсить</button>
+	<% end %>
+</div>
+<div style="padding-top: 10px;"></div>
+<div id="faceit_teams"></div>

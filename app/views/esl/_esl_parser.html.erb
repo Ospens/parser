@@ -1,0 +1,28 @@
+<table>
+	<thead>
+	<tr>
+		<td>Tag</td>
+		<td>Teamlink</td>
+		<td>Skype</td>
+		<td>Steam link</td>
+		<td>Steam ID</td>
+		<td>Last log</td>
+		<td>Country</td>
+		<td>Nick</td>
+	</tr>	
+	</thead>
+	<tbody>
+	<% @showings.each do |team|%>
+		<tr>
+			<td><%= link_to team[:team_tag],team[:team_url] %></td>
+			<td><%= link_to team[:team_url], team[:team_url] %></td>
+			<td><%= team[:skype] %></td>
+			<td><%= team[:cap_steam_64] %></td>
+			<td><%= link_to team[:cap_steam], team[:cap_steam] %></td>
+			<td><%= team[:last_log] %></td>
+			<td><%= team[:country] %></td>
+			<td><%= team[:cap_nickname] %></td>
+		</tr>
+	<% end %>
+	</tbody>
+</table>
