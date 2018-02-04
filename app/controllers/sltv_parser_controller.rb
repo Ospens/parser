@@ -21,13 +21,34 @@ class SltvParserController < ApplicationController
 	def parser
 		# Авторизация
 		auth
-		html = @agent.get('http://dota2.starladder.tv/tournaments/')
 		#Регулярное выражение для поиска даты
-		date = params[:q] != '' ? params[:q] : '11 сентября'
-		@date = /^#{date}/
+		@date = params[:q] != '' ? params[:q] : '11 сентября'
+		
 		@showings = []
 		@tags     = []
 		@tour     = []
+
+		one_tour =  @date.include?'http://dota2.starladder.tv/tournament/'
+		one_tour ? solo_tour : date_parsing 
+
+	end
+
+	def solo_tour
+		@tour_link = @agent.get(@date+'/members')
+		tournament_processing
+
+		@showings.push(
+		title: '',
+		page: @page, 
+		tour_tags: @tags
+		)
+		@tags     = []
+		@tour     = []
+	end
+
+	def date_parsing	
+		html = @agent.get('http://dota2.starladder.tv/tournaments/')
+		@date = /^#{@date}/
 		#Выбрать див с турнирами
 		@page = html.css('div.tournament_list')
 		@page.each do |doc|
@@ -64,55 +85,55 @@ class SltvParserController < ApplicationController
 
 	def tournament_processing
 		@block = @tour_link.css('div.tournament_members_list')	
-	  @block.css('tr').each do |tr_team|
-		@team_tag = tr_team.css('span').text.strip
-		next if @team_tag == ""
-		team_link = tr_team.css('a.tournament_member').each{ |link| @squad_link = link['href'] }
-		#mechanize не парсит ссылку, хз почему, пришлось использовать Nokogiri
-		@s_link = Nokogiri::HTML(open('http://dota2.starladder.tv'+@squad_link))
-		if @s_link.css('.usermenu').css('li a') == nil
-			@team_link      = 'Команда удалена'
-			@skype          = 'Команда удалена'
-			@cap_link       = 'Команда удалена'
-			@cap_nick       = 'Команда удалена'
-			@capitan_link   = 'Команда удалена'
-			@steam_link 	= 'Команда удалена'
-			@steam_id 		= 'Команда удалена'
-			@last_log_steam = 'Команда удалена'
-			@country        = 'Команда удалена'
-		else
-			@team_link      = @s_link.css('.usermenu').css('li a')[0] != nil ? 'http://dota2.starladder.tv' + @s_link.css('.usermenu').css('li a')[0]['href'] : 'команда удалена' 
-			@skype          = @s_link.css('span.team_info_contacts_text').present? ? @s_link.css('span.team_info_contacts_text')[0].text : 'команда удалена'
-			@cap_link       = @s_link.css('div.team_info_contacts_title a')[0].present? ? @s_link.css('div.team_info_contacts_title a')[0]['href'] : 'команда удалена'
-			@capitan_link   = @cap_link != 'команда удалена' ? @agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history') : 'команда удалена'
-			
-			if @capitan_link != 'команда удалена'
-				@cap_nick       = @capitan_link.css('span.info-general__container__name')[0].present? ? @capitan_link.css('span.info-general__container__name')[0].text : 'команда удалена'
-				@steam_link     = @cap_link != 'команда удалена' ? get_steam : 'команда удалена' 
-				@country        = @capitan_link.body.scan(/<i class="ico_flag ico_flag_(.*)"><\/i><span/)[0][0] if @cap_link != 'команда удалена'
+	 	@block.css('tr').each do |tr_team|
+			@team_tag = tr_team.css('span').text.strip
+			next if @team_tag == ""
+			team_link = tr_team.css('a.tournament_member').each{ |link| @squad_link = link['href'] }
+			#mechanize не парсит ссылку, хз почему, пришлось использовать Nokogiri
+			@s_link = Nokogiri::HTML(open('http://dota2.starladder.tv'+@squad_link))
+			if @s_link.css('.usermenu').css('li a') == nil
+				@team_link      = 'Команда удалена'
+				@skype          = 'Команда удалена'
+				@cap_link       = 'Команда удалена'
+				@cap_nick       = 'Команда удалена'
+				@capitan_link   = 'Команда удалена'
+				@steam_link 	= 'Команда удалена'
+				@steam_id 		= 'Команда удалена'
+				@last_log_steam = 'Команда удалена'
+				@country        = 'Команда удалена'
+			else
+				@team_link      = @s_link.css('.usermenu').css('li a')[0] != nil ? 'http://dota2.starladder.tv' + @s_link.css('.usermenu').css('li a')[0]['href'] : 'команда удалена' 
+				@skype          = @s_link.css('span.team_info_contacts_text').present? ? @s_link.css('span.team_info_contacts_text')[0].text : 'команда удалена'
+				@cap_link       = @s_link.css('div.team_info_contacts_title a')[0].present? ? @s_link.css('div.team_info_contacts_title a')[0]['href'] : 'команда удалена'
+				@capitan_link   = @cap_link != 'команда удалена' ? @agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history') : 'команда удалена'
+				
+				if @capitan_link != 'команда удалена'
+					@cap_nick       = @capitan_link.css('span.info-general__container__name')[0].present? ? @capitan_link.css('span.info-general__container__name')[0].text : 'команда удалена'
+					@steam_link     = @cap_link != 'команда удалена' ? get_steam : 'команда удалена' 
+					@country        = @capitan_link.body.scan(/<i class="ico_flag ico_flag_(.*)"><\/i><span/)[0][0] if @cap_link != 'команда удалена'
 
-				if @steam_link != 'Стима нет'
-					about_steam = SteamIdController.new				
-					page_steam = @agent.get('https://steamid.xyz/'+@steam_link)
-					@last_log_steam = about_steam.get_last_log(page_steam)
-					@steam_id = about_steam.get_steam_id(page_steam)
+					if @steam_link != 'Стима нет'
+						about_steam = SteamIdController.new				
+						page_steam = @agent.get('https://steamid.xyz/'+@steam_link)
+						@last_log_steam = about_steam.get_last_log(page_steam)
+						@steam_id = about_steam.get_steam_id(page_steam)
+					end
 				end
 			end
-		end
-		@steam_link = 'ошибка' if @steam_link == 0 
-		@tags.push(
-			team_tag: @team_tag,
-			squad_link: @squad_link,
-			team_link: @team_link,
-			skype: @skype,
-			capitan_link: @cap_link,
-			last_log_steam: @last_log_steam,
-			steam_id: @steam_id,
-			cap_nick: @cap_nick,
-			country: @country,
-			steam_link: @steam_link
-			)
-	end		
+			@steam_link = 'ошибка' if @steam_link == 0 
+			@tags.push(
+				team_tag: @team_tag,
+				squad_link: @squad_link,
+				team_link: @team_link,
+				skype: @skype,
+				capitan_link: @cap_link,
+				last_log_steam: @last_log_steam,
+				steam_id: @steam_id,
+				cap_nick: @cap_nick,
+				country: @country,
+				steam_link: @steam_link
+				)
+		end		
 	end
 
 end 
