@@ -112,8 +112,8 @@ class SltvParserController < ApplicationController
 					@steam_link     = @cap_link != 'команда удалена' ? get_steam : 'команда удалена' 
 					@country        = @capitan_link.body.scan(/<i class="ico_flag ico_flag_(.*)"><\/i><span/)[0][0] if @cap_link != 'команда удалена'
 
-					if @steam_link != 'Стима нет'
-						about_steam = SteamIdController.new				
+					if @steam_link != 'Стима нет' && @steam_link != 0 
+						about_steam = SteamIdController.new
 						page_steam = @agent.get('https://steamid.xyz/'+@steam_link)
 						@last_log_steam = about_steam.get_last_log(page_steam)
 						@steam_id = about_steam.get_steam_id(page_steam)
