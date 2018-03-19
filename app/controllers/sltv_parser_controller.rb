@@ -1,8 +1,8 @@
 class SltvParserController < ApplicationController
 	before_action :authenticate_user!
-   	respond_to :html, :js
-	
-	def index		
+ 	respond_to :html, :js
+
+	def index
 	end
 
 	def auth
@@ -23,13 +23,14 @@ class SltvParserController < ApplicationController
 		auth
 		#Регулярное выражение для поиска даты
 		@date = params[:q] != '' ? params[:q] : '11 сентября'
-		
+		page_tournament_list = params[:page] != '' ? params[:page] :  '1'
+
 		@showings = []
 		@tags     = []
 		@tour     = []
 
 		one_tour =  @date.include?'http://dota2.starladder.tv/tournament/'
-		one_tour ? solo_tour : date_parsing 
+		one_tour ? solo_tour : date_parsing(page_tournament_list)
 
 	end
 
@@ -39,15 +40,15 @@ class SltvParserController < ApplicationController
 
 		@showings.push(
 		title: '',
-		page: @page, 
+		page: @page,
 		tour_tags: @tags
 		)
 		@tags     = []
 		@tour     = []
 	end
 
-	def date_parsing	
-		html = @agent.get('http://dota2.starladder.tv/tournaments/')
+	def date_parsing(page_tournament_list)
+		html = @agent.get("http://dota2.starladder.tv/tournaments/#{page_tournament_list}")
 		@date = /^#{@date}/
 		#Выбрать див с турнирами
 		@page = html.css('div.tournament_list')
@@ -56,7 +57,7 @@ class SltvParserController < ApplicationController
 				tags = tr.css('.count_tourney_teams').each do |tag|
 					#проверка даты регулярным выражением
 					next if tag.text.strip !~ @date
-					@tour_name = tr.css('.tournament_name').text.strip.gsub(/[+]/, '')  
+					@tour_name = tr.css('.tournament_name').text.strip.gsub(/[+]/, '')
 					@page = tr.css('.tournament_name')[0]['href'].strip
 
 					@tour_link = @agent.get('http://dota2.starladder.tv'+@page+'/members')
@@ -64,7 +65,7 @@ class SltvParserController < ApplicationController
 
 					@showings.push(
 					title: @tour_name,
-					page: @page, 
+					page: @page,
 					tour_tags: @tags
 					)
 					@tags     = []
@@ -78,13 +79,13 @@ class SltvParserController < ApplicationController
 		return 'Стима нет' if @capitan_link.css('.history_g_id a')[0] == nil
 		@capitan_link.css('.history_g_id').each do |history|
 			next if history.css('i')[0]['class'] != 'ico_trn ico_trn_dota2'
-			return history.css('a')[0]['href'] if @capitan_link.css('.history_g_id a')[0] != nil 
+			return history.css('a')[0]['href'] if @capitan_link.css('.history_g_id a')[0] != nil
 			return 'Стима нет'
 		end
 	end
 
 	def tournament_processing
-		@block = @tour_link.css('div.tournament_members_list')	
+		@block = @tour_link.css('div.tournament_members_list')
 	 	@block.css('tr').each do |tr_team|
 			@team_tag = tr_team.css('span').text.strip
 			next if @team_tag == ""
@@ -102,17 +103,17 @@ class SltvParserController < ApplicationController
 				@last_log_steam = 'Команда удалена'
 				@country        = 'Команда удалена'
 			else
-				@team_link      = @s_link.css('.usermenu').css('li a')[0] != nil ? 'http://dota2.starladder.tv' + @s_link.css('.usermenu').css('li a')[0]['href'] : 'команда удалена' 
+				@team_link      = @s_link.css('.usermenu').css('li a')[0] != nil ? 'http://dota2.starladder.tv' + @s_link.css('.usermenu').css('li a')[0]['href'] : 'команда удалена'
 				@skype          = @s_link.css('span.team_info_contacts_text').present? ? @s_link.css('span.team_info_contacts_text')[0].text : 'команда удалена'
 				@cap_link       = @s_link.css('div.team_info_contacts_title a')[0].present? ? @s_link.css('div.team_info_contacts_title a')[0]['href'] : 'команда удалена'
 				@capitan_link   = @cap_link != 'команда удалена' ? @agent.get('http://dota2.starladder.tv'+@cap_link+'/gameid_history') : 'команда удалена'
-				
+
 				if @capitan_link != 'команда удалена'
 					@cap_nick       = @capitan_link.css('span.info-general__container__name')[0].present? ? @capitan_link.css('span.info-general__container__name')[0].text : 'команда удалена'
-					@steam_link     = @cap_link != 'команда удалена' ? get_steam : 'команда удалена' 
+					@steam_link     = @cap_link != 'команда удалена' ? get_steam : 'команда удалена'
 					@country        = @capitan_link.body.scan(/<i class="ico_flag ico_flag_(.*)"><\/i><span/)[0][0] if @cap_link != 'команда удалена'
 
-					if @steam_link != 'Стима нет' && @steam_link != 0 
+					if @steam_link != 'Стима нет' && @steam_link != 0
 						about_steam = SteamIdController.new
 						page_steam = @agent.get('https://steamid.xyz/'+@steam_link)
 						@last_log_steam = about_steam.get_last_log(page_steam)
@@ -120,7 +121,7 @@ class SltvParserController < ApplicationController
 					end
 				end
 			end
-			@steam_link = 'ошибка' if @steam_link == 0 
+			@steam_link = 'ошибка' if @steam_link == 0
 			@tags.push(
 				team_tag: @team_tag,
 				squad_link: @squad_link,
@@ -133,8 +134,8 @@ class SltvParserController < ApplicationController
 				country: @country,
 				steam_link: @steam_link
 				)
-		end		
+		end
 	end
 
-end 
+end
 
