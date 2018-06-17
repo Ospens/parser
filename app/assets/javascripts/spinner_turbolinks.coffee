@@ -6,4 +6,4 @@ $(document).on "turbolinks:load", ->
 	    $("#spinner").hide())
 	$(".form-group").on("ajax:error", (e) ->
 	    $("#spinner").hide()
-	    alert(e.detail[0].slice(0, 300)))
+	    alert('Ошибка. Что-то пошло не так'))
