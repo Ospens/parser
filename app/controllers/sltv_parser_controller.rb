@@ -46,6 +46,7 @@ class SltvParserController < ApplicationController
   end
 
   def solo_tour
+    @tags = []
     @tour_link = @agent.get("#{@date}/members")
     tournament_processing
 
@@ -126,7 +127,7 @@ class SltvParserController < ApplicationController
           end
         end
       end
-      steam_link = 'ошибка' if steam_link == '0'
+      steam_link = 'ошибка' if steam_link == 0
       @tags.push(
         team_tag: @team_tag,
         squad_link: @squad_link,
