@@ -6,7 +6,7 @@
 			<td><%= link_to doc[:team_url], doc[:team_url] %></td>
 			<td>tba</td>
 			<td><%= doc[:cap_steam] %></td>
-			<td><%= link_to ('http://steamcommunity.com/profiles/'+doc[:cap_steam_64]), ('http://steamcommunity.com/profiles/'+doc[:cap_steam_64])%></td>
+			<td><%= link_to ("http://steamcommunity.com/profiles/#{doc[:cap_steam_64]}"), ("http://steamcommunity.com/profiles/#{doc[:cap_steam_64]}")%></td>
 			<td><%= doc[:last_log] %></td>
 			<td><%= doc[:cap_country] %></td>
 			<td><%= link_to doc[:cap_nickname], ('https://www.faceit.com/ru/players/'+doc[:cap_nickname]) %></td>
