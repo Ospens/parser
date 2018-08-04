@@ -7,6 +7,8 @@ class SltvParserController < ApplicationController
   def index; end
 
   def parser
+    @proxy_ip = params[:ip].length > 0 ? params[:ip] : nil
+    @proxy_port = params[:port].length > 0 ? params[:port] : nil
     auth
     @date = params[:q] != '' ? params[:q] : '11 сентября'
     page_tournament_list = params[:page] != '' ? params[:page] : '1'
@@ -21,6 +23,7 @@ class SltvParserController < ApplicationController
     @agent = Mechanize.new do |agent|
       agent.user_agent_alias = 'Linux Mozilla'
       agent.request_headers = { 'X-Requested-With' => 'XMLHttpRequest' }
+      agent.set_proxy(@proxy_ip, @proxy_port) if @proxy_ip && @proxy_port
     end
     page = @agent.get('http://dota2.starladder.tv/login')
     form = page.forms.first
@@ -86,7 +89,11 @@ class SltvParserController < ApplicationController
       next if @team_tag == ''
       @squad_link = tr_team.css('a.tournament_member').first['href']
       # mechanize do not parse link, i don't know why, used Nokogiri
-      @s_link = Nokogiri::HTML(open('http://dota2.starladder.tv' + @squad_link))
+      if @proxy_ip && @proxy_port
+        @s_link = Nokogiri::HTML(open("http://dota2.starladder.tv#{@squad_link}", :proxy => "http://#{@proxy_ip}:#{@proxy_port}/"))
+      else
+        @s_link = Nokogiri::HTML(open("http://dota2.starladder.tv#{@squad_link}"))
+      end
       team_link = skype = cap_link = cap_nick = capitan_link = 'Команда удалена'
       steam_link = steam_id = last_log_steam = country = 'Команда удалена'
       unless @s_link.css('.usermenu').css('li a').nil?

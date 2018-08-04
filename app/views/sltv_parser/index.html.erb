@@ -3,9 +3,14 @@
       <div class="input-group">
         <%= text_field_tag :q, nil, class: 'form-control mr-sm-2 link-tour', placeholder: 'Например: 25 сентября или ссылка на турнир' %>
   	    <%= text_field_tag :page, nil, class: 'form-control mr-sm-2', placeholder: '#' %>
-		<button  id="button" class="btn btn-outline-danger my-2 my-sm-0">Спарсить</button>
+      </div>
+      <br/>
+      <div class="input-group">
+  	    <%= text_field_tag :ip, nil, class: 'form-control mr-sm-2', placeholder: '185.22.174.69 ' %>
+  	    <%= text_field_tag :port, nil, class: 'form-control mr-sm-2', placeholder: '10010' %>
+	    	<button  id="button" class="btn btn-outline-danger my-2 my-sm-0">Спарсить</button>
+      </div>
 	<% end %>
-</div>
 <div style="padding-top: 10px;"></div>
 <input type="button" value="Скопировать таблицу" id='copy_table' class='btn btn-outline-success'>
 <div class='clearfix'></div>

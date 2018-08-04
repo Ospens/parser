@@ -1,28 +1,23 @@
-<table>
-	<thead>
-		<tr>
-			<td>Team tag</td>
-			<td>Link</td>
-			<td>Skype</td>
-			<td>Steam id</td>
-			<td>Steam link</td>
-			<td>Last log</td>
-			<td>Country</td>
-			<td>Nickname</td>
-		</tr>	
-	<thead>
-<% @showings.each do |doc|%>
-	<tbody>
-		<tr>
-			<td><%= link_to doc[:tag],('https://en.wesg.com'+doc[:team_link]) %></td>
-			<td><%= link_to ('https://en.wesg.com'+doc[:team_link]),('https://en.wesg.com'+doc[:team_link]) %></td>
-			<td><%= link_to doc[:skype],('https://en.wesg.com'+doc[:cap_link]) %></td>
-			<td><%= link_to doc[:steam_id],('https://en.wesg.com'+doc[:steam_id]) %></td>
-			<td><%= link_to ('http://steamcommunity.com/profiles/'+doc[:steam]),('http://steamcommunity.com/profiles/'+doc[:steam])  %></td>
-			<td><%= doc[:last_log_steam] %></td>
-			<td><%= link_to doc[:country],('https://en.wesg.com'+doc[:team_link]) %></td>
-			<td><%= link_to doc[:cap_nick],('https://en.wesg.com'+doc[:cap_link]) %></td>
-		</tr>
-	</tbody>
-<% end %>
-</table>
+%table
+  %thead
+    %tr
+      %td Team tag
+      %td Link
+      %td Skype
+      %td Steam id
+      %td Steam link
+      %td Last log
+      %td Country
+      %td Nickname
+    %thead
+      - @showings.each do |doc|
+        %tbody
+          %tr
+            %td= link_to doc[:tag],('https://en.wesg.com'+doc[:team_link])
+            %td= link_to ('https://en.wesg.com'+doc[:team_link]),('https://en.wesg.com'+doc[:team_link])
+            %td= link_to doc[:skype],('https://en.wesg.com'+doc[:cap_link])
+            %td= link_to doc[:steam_id],('https://en.wesg.com'+doc[:steam_id])
+            %td= link_to ('http://steamcommunity.com/profiles/'+doc[:steam]),('http://steamcommunity.com/profiles/'+doc[:steam])
+            %td= doc[:last_log_steam]
+            %td= link_to doc[:country],('https://en.wesg.com'+doc[:team_link])
+            %td= link_to doc[:cap_nick],('https://en.wesg.com'+doc[:cap_link])
