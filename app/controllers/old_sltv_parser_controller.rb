@@ -7,14 +7,14 @@ class SltvParserController < ApplicationController
   def index; end
 
   def parser
+    @proxy_ip = params[:ip].length > 0 ? params[:ip] : nil
+    @proxy_port = params[:port].length > 0 ? params[:port] : nil
     auth
-    #@date = params[:q] != '' ? params[:q] : '11 сентября'
-    #page_tournament_list = params[:page] != '' ? params[:page] : '1'
-    #@showings = []
-    #one_tour = @date.include? 'http://dota2.starladder.tv/tournament/'
-    #one_tour ? solo_tour : date_parsing(page_tournament_list)
-    @tour_link = @agent.get('https://dota2.starladder.com/ru/cis/starladder-amleague-season25/tournaments/1428/players')
-    tour_parse
+    @date = params[:q] != '' ? params[:q] : '11 сентября'
+    page_tournament_list = params[:page] != '' ? params[:page] : '1'
+    @showings = []
+    one_tour = @date.include? 'http://dota2.starladder.tv/tournament/'
+    one_tour ? solo_tour : date_parsing(page_tournament_list)
   end
 
   private
@@ -23,40 +23,14 @@ class SltvParserController < ApplicationController
     @agent = Mechanize.new do |agent|
       agent.user_agent_alias = 'Linux Mozilla'
       agent.request_headers = { 'X-Requested-With' => 'XMLHttpRequest' }
+      agent.set_proxy(@proxy_ip, @proxy_port) if @proxy_ip && @proxy_port
     end
-  end
-
-  def solo_tour
-    @tags = []
-    #@tour_link = @agent.get("#{@date}/members")
-    tour_parse
-
-    @showings.push(title: '', page: @page, tour_tags: @tags)
-  end
-
-  def tour_parse
-    block = @tour_link.css('#participants').css('.main-table')
-    block.css('.main-table-item').each do |team_row|
-      team_uri = team_row.css('.main-table-item-cell').css('.main-table-item-preview-title-box').first['href']
-      p "https://dota2.starladder.com#{team_uri}"
-      team_block_members = @agent.get("https://dota2.starladder.com/ru/teams/5314/members")
-      team_page = @agent.get("https://dota2.starladder.com/ru/teams/5314")
-      # team tag
-      p team_page.css('.profile-new-team-card-title-text').text
-      # team region
-      p team_page.css('.profile-new-team-card-location-accent').text
-      cap_uri = team_block_members.body[/(\/ru\/profile\/)[0-9]{3,}/]
-      p "https://dota2.starladder.com#{cap_uri}"
-      cap_page = @agent.get("https://dota2.starladder.com#{cap_uri}")
-      # steam Id
-      p cap_page.css('main.profile-content')
-        .css('.profile-game-select-info-item')
-                .css('.profile-game-select-info-item')
-        .text.gsub(/[^0-9]/, '')
-      # nick
-      p cap_page.css('.profile-player-card-nickname').text
-      return 'команда удалена'
-    end
+    page = @agent.get('http://dota2.starladder.tv/login')
+    form = page.forms.first
+    form.word = 'kekichkekich'
+    form.password = 'qwerty123456'
+    @agent.submit(form, form.buttons.first)
+    @agent
   end
 
   def steam_get(capitan_link)
@@ -68,6 +42,46 @@ class SltvParserController < ApplicationController
       return 'Стима нет'
     end
   end
+
+  def fetch_steam(capitan_link)
+    return 'Стима нет' if capitan_link.css('.history_g_id a').first.nil?
+    steam_get(capitan_link)
+  end
+
+  def solo_tour
+    @tags = []
+    @tour_link = @agent.get("#{@date}/members")
+    tournament_processing
+
+    @showings.push(title: '', page: @page, tour_tags: @tags)
+  end
+
+  def date_parsing(page_tournament_list)
+    @tags = []
+    html = @agent.get('http://dota2.starladder.tv/'\
+                      "tournaments/#{page_tournament_list}")
+    @date = /^#{@date}/
+    # Select block with tournaments
+    @page = html.css('div.tournament_list')
+    @page.each do |doc|
+      doc.css('tr').each do |tr|
+        tr.css('.count_tourney_teams').each do |tag|
+          # check date
+          next if tag.text.strip !~ @date
+          @tour_name = tr.css('.tournament_name').text.strip.gsub(/[+]/, '')
+          @page = tr.css('.tournament_name').first['href'].strip
+
+          @tour_link = @agent
+                       .get("http://dota2.starladder.tv#{@page}/members")
+          tournament_processing
+
+          @showings.push(title: @tour_name, page: @page, tour_tags: @tags)
+          @tags = []
+        end
+      end
+    end
+  end
+
   def tournament_processing
     @block = @tour_link.css('div.tournament_members_list')
     @block.css('tr').each do |tr_team|
@@ -75,7 +89,11 @@ class SltvParserController < ApplicationController
       next if @team_tag == ''
       @squad_link = tr_team.css('a.tournament_member').first['href']
       # mechanize do not parse link, i don't know why, used Nokogiri
-      @s_link = Nokogiri::HTML(open("http://dota2.starladder.tv#{@squad_link}"))
+      if @proxy_ip && @proxy_port
+        @s_link = Nokogiri::HTML(open("http://dota2.starladder.tv#{@squad_link}", :proxy => "http://#{@proxy_ip}:#{@proxy_port}/"))
+      else
+        @s_link = Nokogiri::HTML(open("http://dota2.starladder.tv#{@squad_link}"))
+      end
       team_link = skype = cap_link = cap_nick = capitan_link = 'Команда удалена'
       steam_link = steam_id = last_log_steam = country = 'Команда удалена'
       unless @s_link.css('.usermenu').css('li a').nil?
