@@ -12,7 +12,9 @@ Rails.application.routes.draw do
 	resources :steam_id
 	resources :faceit
 	resources :sltv_last_matches
-	resources :esl
+  resources :esl
+  
+  get "/test", to: "vkontakte#test"
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
