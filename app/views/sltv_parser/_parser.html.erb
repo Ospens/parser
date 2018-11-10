@@ -1,14 +1,13 @@
 <table>
 	<thead>
 	<tr>
-		<td>Tag</td>
-		<td>Teamlink</td>
-		<td>Skype</td>
-		<td>Steam link</td>
-		<td>Steam ID</td>
-		<td>Last log</td>
-		<td>Country</td>
-		<td>Nick</td>
+		<td>Ник капитана</td>
+		<td>Линк капитана</td>
+		<td>Стим капитана</td>
+		<td>Тег команды</td>
+		<td>Ссылка команды</td>
+		<td>Дата последнего захода в стим капитаном</td>
+		<td>Страна</td>
 	</tr>	
 	</thead>
 	<tbody>
@@ -18,14 +17,13 @@
 		</tr>
 			<% doc[:tour_tags].each do |tour_tag|%>
 		<tr>
-			<td><%= link_to tour_tag[:team_tag],('http://dota2.starladder.tv'+tour_tag[:squad_link]) %></td>
+			<td><%= link_to tour_tag[:cap_nick], tour_tag[:cap_link] %></td>
+			<td><%= link_to tour_tag[:cap_link], tour_tag[:cap_link] %></td>
+			<td><%= link_to tour_tag[:steam_id], ('http://steamcommunity.com/profiles/'+tour_tag[:steam_id]) %></td>
+			<td><%= link_to tour_tag[:team_tag], tour_tag[:team_link] %></td>
 			<td><%= link_to tour_tag[:team_link], tour_tag[:team_link] %></td>
-			<td><%= link_to tour_tag[:skype], ("http://dota2.starladder.tv"+tour_tag[:capitan_link]) %></td>
-			<td><%= link_to tour_tag[:steam_id], tour_tag[:steam_link] %></td>
-			<td><%= link_to tour_tag[:steam_link], tour_tag[:steam_link] %></td>
-			<td><%= tour_tag[:last_log_steam] %></td>
+			<td><%= link_to tour_tag[:last_log_steam], ('http://steamcommunity.com/profiles/'+tour_tag[:steam_id]) %></td>
 			<td><%= tour_tag[:country] %></td>
-			<td><%= tour_tag[:cap_nick] %></td>
 		</tr>
 		<% end %>
 	<% end %>
