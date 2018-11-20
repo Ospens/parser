@@ -3,6 +3,12 @@
       <div class="input-group">
         <%= text_field_tag :q, nil, class: 'form-control mr-sm-2 link-tour', placeholder: 'Например: 25 сентября или ссылка на турнир' %>
   	    <%= text_field_tag :page, nil, class: 'form-control mr-sm-2', placeholder: '#' %>
+      </div>
+      <div class='mt-3'/>
+      <div class="input-group">
+        <%= text_field_tag :start_count, nil, class: 'form-control mr-sm-2', placeholder: 'Парсинг по фильтрам кол-во игроков 1-15' %>
+        <%= text_field_tag :end_count, nil, class: 'form-control mr-sm-2  ', placeholder: '1-15' %>
+        <%= text_field_tag :page, nil, class: 'form-control mr-sm-2  ', placeholder: 'Номер прокрутки' %>
         <button  id="button" class="btn btn-outline-danger my-2 my-sm-0">Спарсить</button>
       </div>
       <br/>
