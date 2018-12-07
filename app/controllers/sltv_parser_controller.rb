@@ -13,11 +13,15 @@ class SltvParserController < ApplicationController
     if params[:start_count].present? && params[:end_count].present? && params[:page].present?
       filters_row = "https://dota2.starladder.com/ru/cis/teams.json?by_memberships_count=#{params[:start_count].to_i}..#{params[:end_count].to_i}&by_name=&page=#{params[:page].to_i}"
       filter_parse(filters_row)
+      @showings.push(title: '', tour_tags: @tags)
+    elsif params[:customCheck1]
+      @tour_link = @agent.get(params[:q])
+      face_to_face_tour
     else
       @tour_link = @agent.get(params[:q])
       tour_parse
+      @showings.push(title: '', tour_tags: @tags)
     end
-    @showings.push(title: '', tour_tags: @tags)
   end
 
   private
@@ -73,6 +77,19 @@ class SltvParserController < ApplicationController
         steam_id: cap_steam_id,
         cap_nick: cap_nickname,
         country: team_region
+      )
+    end
+  end
+
+  def face_to_face_tour
+    block = @tour_link.css('#participants').css('.main-table')
+    block.css('.main-table-item').each do |team_row|
+      cap_uri = team_row.css('.main-table-item-cell').css('.main-table-item-preview-title-box').first['href']
+      cap_nick = team_row.css('.main-table-item-cell').css('span.main-table-item-preview-title').text
+
+      @tags.push(
+        team_tag: cap_nick,
+        team_link: cap_uri
       )
     end
   end

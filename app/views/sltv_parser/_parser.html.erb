@@ -11,21 +11,30 @@
 	</tr>	
 	</thead>
 	<tbody>
-	<% @showings.each do |doc|%>
-		<tr>
-			<td><%= doc[:title] %></td>
-		</tr>
-			<% doc[:tour_tags].each do |tour_tag|%>
-		<tr>
-			<td><%= link_to tour_tag[:cap_nick], tour_tag[:cap_link] %></td>
-			<td><%= link_to tour_tag[:cap_link], tour_tag[:cap_link] %></td>
-			<td><%= link_to tour_tag[:steam_id], ('http://steamcommunity.com/profiles/'+tour_tag[:steam_id]) %></td>
-			<td><%= link_to tour_tag[:team_tag], tour_tag[:team_link] %></td>
-			<td><%= link_to tour_tag[:team_link], tour_tag[:team_link] %></td>
-			<td><%= link_to tour_tag[:last_log_steam], ('http://steamcommunity.com/profiles/'+tour_tag[:steam_id]) %></td>
-			<td><%= tour_tag[:country] %></td>
-		</tr>
-		<% end %>
-	<% end %>
+  <% if @showings.empty? %>
+    <% @tags.each do |player|%>
+      <tr>
+        <td><%= link_to player[:team_tag], ("https://dota2.starladder.com/ru#{player[:team_link]}") %></td>
+        <td><%= link_to ("https://dota2.starladder.com/ru#{player[:team_link]}"), ("https://dota2.starladder.com/ru#{player[:team_link]}") %></td>
+      </tr>
+    <% end %>
+  <% else %>
+    <% @showings.each do |doc|%>
+      <tr>
+        <td><%= doc[:title] %></td>
+      </tr>
+        <% doc[:tour_tags].each do |tour_tag|%>
+      <tr>
+        <td><%= link_to tour_tag[:cap_nick], tour_tag[:cap_link] %></td>
+        <td><%= link_to tour_tag[:cap_link], tour_tag[:cap_link] %></td>
+        <td><%= link_to tour_tag[:steam_id], ('http://steamcommunity.com/profiles/'+tour_tag[:steam_id]) %></td>
+        <td><%= link_to tour_tag[:team_tag], tour_tag[:team_link] %></td>
+        <td><%= link_to tour_tag[:team_link], tour_tag[:team_link] %></td>
+        <td><%= link_to tour_tag[:last_log_steam], ('http://steamcommunity.com/profiles/'+tour_tag[:steam_id]) %></td>
+        <td><%= tour_tag[:country] %></td>
+      </tr>
+      <% end %>
+    <% end %>
+  <% end %>
 	</tbody>
 </table>
